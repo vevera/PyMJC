@@ -6,9 +6,8 @@ Este repositório tem como objetivo fazer as entregas do projeto da disciplina d
 
 Os seguintes alunos (equipe XXXXX) são responsáveis pelo projeto: 
 
--  Mátricula: XXXX | Aluno: XXXXX 
--  Mátricula: XXXX | Aluno: XXXXX
--  Mátricula: XXXX | Aluno: XXXXX
+-  Mátricula: 470435 | Aluno: Daniel Silva Agostinho 
+-  Mátricula: 473255 | Aluno: Daniel Duarte de Lima
 
 # Método de Avaliação
 
