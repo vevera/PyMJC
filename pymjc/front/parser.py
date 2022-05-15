@@ -1,7 +1,7 @@
 from pymjc.front.ast import *
 from pymjc.front.lexer import MJLexer
 from sly import Parser
-
+# parser
 from pymjc.log import MJLogger
 
 class MJParser(Parser):
@@ -25,7 +25,7 @@ class MJParser(Parser):
 
 
     ###################################
-	#Program and Class Declarations   #
+    #Program and Class Declarations   #
     ###################################    
     @_('MainClass ClassDeclarationStar')
     def Goal(self, p):

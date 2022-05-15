@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import Type
-
+# symbol
 class Symbol():
     
     def __init__(self, name: str) -> None:
