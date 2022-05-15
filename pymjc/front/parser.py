@@ -29,6 +29,8 @@ class MJParser(Parser):
     ###################################    
     @_('MainClass ClassDeclarationStar')
     def Goal(self, p):
+        #if(p.ClassDeclarationStar)
+        p.ClassDeclarationStar.class_decl_list.reverse()
         return Program(p.MainClass, p.ClassDeclarationStar)
     
     @_('CLASS Identifier LEFTBRACE PUBLIC STATIC VOID MAIN LEFTPARENT STRING LEFTSQRBRACKET RIGHTSQRBRACKET Identifier RIGHTPARENT LEFTBRACE Statement RIGHTBRACE RIGHTBRACE')
@@ -125,7 +127,7 @@ class MJParser(Parser):
 
     @_('Identifier')
     def Type(self, p):
-        return IdentifierType(p)
+        return IdentifierType(p.Identifier.name)
 
     ###################################
     #Statements Declarations          #
@@ -286,6 +288,11 @@ class MJParser(Parser):
     def IntLiteral(self, p):
         return IntegerLiteral(int(p.NUM))
 
+    @_('MINUS NUM')
+    def IntLiteral(self, p):
+        return IntegerLiteral(-1*int(p.NUM))
+
     def error(self, p):
         MJLogger.parser_log(self.src_file_name, p.lineno, p.value[0])
+        print(self.src_file_name, p.lineno, p.value)
         self.syntax_error = True

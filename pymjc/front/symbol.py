@@ -40,7 +40,7 @@ class MethodEntry():
     def get_locals(self):
         return self.locals
 
-    def get_locals(self, id: str) -> Type:
+    def get_local(self, id: str) -> Type:
         return self.locals[Symbol.symbol(id).to_string()]        
 
     def get_num_params(self) -> int:
@@ -80,16 +80,6 @@ class MethodEntry():
 
 
 class ClassEntry():
-
-    """def __init__(self, *args):
-        
-        super_class_val = None
-        if len(args) == 1:
-            super_class_val = args[0]
-
-        self.fields = {}
-        self.methods = {}
-        self.supper_class_id = super_class_val"""
 
     def __init__(self, supper_class_id: str = None):
         self.fields = {}
@@ -175,12 +165,31 @@ class SymbolTable():
         
         return True
 
+    """def add_extends_entry_filds(self, id: str, supper_class_id: str) -> None:
+
+        base: ClassEntry = self.get_class_entry(Symbol.symbol(id).to_string())
+        supper_class: ClassEntry = self.get_class_entry(Symbol.symbol(supper_class_id).to_string())
+        #print("AQUI1",supper_field_id)
+        for supper_field_id in supper_class.get_fields().keys():
+            print("AQUI",supper_field_id)
+            base.add_var(supper_field_id, supper_class.get_field(supper_field_id))
+        
+    def add_extends_entry_methods(self, id: str, supper_class_id: str) -> None:
+
+        base: ClassEntry = self.get_class_entry(Symbol.symbol(id).to_string())
+        supper_class: ClassEntry = self.get_class_entry(Symbol.symbol(supper_class_id).to_string())
+        #print("AQUI1",supper_field_id)
+        for supper_method_id in supper_class.get_methods().keys():
+            base.add_method(supper_method_id, supper_class.get_method(supper_method_id))"""
+
+    
     def add_extends_entry(self, id: str, supper_class_id: str) -> None:
 
         base: ClassEntry = self.get_class_entry(Symbol.symbol(id).to_string())
         supper_class: ClassEntry = self.get_class_entry(Symbol.symbol(supper_class_id).to_string())
-
+        #print("AQUI1",supper_field_id)
         for supper_field_id in supper_class.get_fields().keys():
+            print("AQUI",supper_field_id)
             base.add_var(supper_field_id, supper_class.get_field(supper_field_id))
         
         for supper_method_id in supper_class.get_methods().keys():
