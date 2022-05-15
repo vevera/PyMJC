@@ -5,6 +5,7 @@ import enum
 from pymjc.front.ast import *
 from pymjc.front.symbol import *
 
+
 class SemanticErrorType(enum.Enum):
     ALREADY_DECLARED_CLASS = 1
     ALREADY_DECLARED_METHOD = 2
@@ -565,7 +566,6 @@ class DepthFirstVisitor(Visitor):
         element.condition_exp.accept(self)
         element.statement.accept(self)
 
-    
     def visit_print(self, element: Print) -> None:
         element.print_exp.accept(self)
 
@@ -579,7 +579,6 @@ class DepthFirstVisitor(Visitor):
         element.array_exp.accept(self)
         element.right_side.accept(self)
 
-    
     def visit_and(self, element: And) -> None:
         element.left_side.accept(self)
         element.right_side.accept(self)
@@ -588,21 +587,17 @@ class DepthFirstVisitor(Visitor):
         element.left_side.accept(self)
         element.right_side.accept(self)
 
-
     def visit_plus(self, element: Plus) -> None:
         element.left_side.accept(self)
         element.right_side.accept(self)
-
 
     def visit_minus(self, element: Minus) -> None:
         element.left_side.accept(self)
         element.right_side.accept(self)
 
-    
     def visit_times(self, element: Times) -> None:
         element.left_side.accept(self)
         element.right_side.accept(self)
-
 
     def visit_array_lookup(self, element: ArrayLookup) -> None:
         element.out_side_exp.accept(self)
@@ -676,26 +671,106 @@ class FillSymbolTableVisitor(Visitor):
         return self.symbol_table
 
     def visit_program(self, element: Program) -> None:
-        pass
+        if(element != None):
+            element.main_class.accept(self)
+            for index in range(element.class_decl_list.size()):
+                element.class_decl_list.element_at(index).accept(self)
 
     def visit_main_class(self, element: MainClass) -> None:
-        pass
+
+        class_entry = ClassEntry()
+        self.symbol_table.add_scope(element.class_name_identifier.name, class_entry)
+        
+        element.class_name_identifier.accept(self)
+        element.arg_name_ideintifier.accept(self)
+        element.statement.accept(self)
 
     def visit_class_decl_extends(self, element: ClassDeclExtends) -> None:
-        pass
+
+        super_class_exists = self.symbol_table.contains_key(element.super_class_name.name)
+        if(not super_class_exists):
+            self.add_semantic_error(SemanticErrorType.UNDECLARED_SUPER_CLASS)
+        
+        class_entry = ClassEntry(element.super_class_name.name)
+        added_up = self.symbol_table.add_scope(element.class_name.name, class_entry)
+
+        if(super_class_exists):
+            self.symbol_table.add_extends_entry(element.class_name.name, element.super_class_name.name)
+
+        if(not added_up):
+            self.add_semantic_error(SemanticErrorType.ALREADY_DECLARED_CLASS)
+        
+        element.class_name.accept(self)
+        element.super_class_name.accept(self)
+        for index in range(element.var_decl_list.size()):
+            element.var_decl_list.element_at(index).accept(self)
+    
+        for index in range(element.method_decl_list.size()):
+            element.method_decl_list.element_at(index).accept(self)
 
     def visit_class_decl_simple(self, element: ClassDeclSimple) -> None:
-        pass
+
+        class_entry = ClassEntry()
+        added_up = self.symbol_table.add_scope(element.class_name.name, class_entry)
+        if(not added_up):
+            self.add_semantic_error(SemanticErrorType.ALREADY_DECLARED_CLASS)
+
+
+        element.class_name.accept(self)
+
+        for index in range(element.var_decl_list.size()):
+            element.var_decl_list.element_at(index).accept(self)
+    
+        for index in range(element.method_decl_list.size()):
+            element.method_decl_list.element_at(index).accept(self)
+
 
     def visit_var_decl(self, element: VarDecl) -> None:
-        pass
-     
+        
+        added_up = None
+        if self.symbol_table.curr_method != None:
+            added_up = self.symbol_table.add_local(element.name.name, element.type)
+        else:
+            added_up = self.symbol_table.add_field(element.name.name, element.type)
+
+        if(not added_up):
+            self.add_semantic_error(SemanticErrorType.ALREADY_DECLARED_VAR)
+             
+        element.type.accept(self)
+        element.name.accept(self)
 
     def visit_method_decl(self, element: MethodDecl) -> None:
-        pass
+        
+        method_entry = MethodEntry(element.type)
+        added_up = self.symbol_table.add_method(element.name.name, method_entry)
+
+        if(not added_up):
+           self.add_semantic_error(SemanticErrorType.ALREADY_DECLARED_METHOD) 
+         
+        element.type.accept(self)
+        element.name.accept(self)
+
+        for index in range(element.formal_param_list.size()):
+            element.formal_param_list.element_at(index).accept(self)
+
+        for index in range(element.var_decl_list.size()):
+            element.var_decl_list.element_at(index).accept(self)
+
+        for index in range(element.statement_list.size()):
+            element.statement_list.element_at(index).accept(self)
+
+        element.return_exp.accept(self)
+
 
     def visit_formal(self, element: Formal) -> None:
-        pass
+        
+        added_up = self.symbol_table.add_param(element.name.name, element.type)
+
+        if(not added_up):
+           self.add_semantic_error(SemanticErrorType.DUPLICATED_ARG)
+        
+        element.name.accept(self)
+        element.type.accept(self)
 
 
     def visit_int_array_type(self, element: IntArrayType) -> None:
@@ -716,44 +791,47 @@ class FillSymbolTableVisitor(Visitor):
 
     def visit_if(self, element: If) -> None:
         pass
+        
   
     def visit_while(self, element: While) -> None:
         pass
+        
 
     def visit_print(self, element: Print) -> None:
         pass
+        
 
     def visit_assign(self, element: Assign) -> None:
         pass
-
+        
     def visit_array_assign(self, element: ArrayAssign) -> None:
         pass
 
-    
     def visit_and(self, element: And) -> None:
         pass
+        
 
     def visit_less_than(self, element: LessThan) -> None:
         pass
-
+        
     def visit_plus(self, element: Plus) -> None:
         pass
-
+        
     def visit_minus(self, element: Minus) -> None:
         pass
-
+        
     def visit_times(self, element: Times) -> None:
         pass
-
+        
     def visit_array_lookup(self, element: ArrayLookup) -> None:
         pass
-
+        
     def visit_array_length(self, element: ArrayLength) -> None:
         pass
-
+        
     def visit_call(self, element: Call) -> None:
         pass
-
+        
     def visit_integer_literal(self, element: IntegerLiteral) -> None:
         pass
 
@@ -771,17 +849,16 @@ class FillSymbolTableVisitor(Visitor):
 
     def visit_new_array(self, element: NewArray) -> None:
         pass
-
+        
     def visit_new_object(self, element: NewObject) -> None:
         pass
-
+        
     def visit_not(self, element: Not) -> None:
         pass
+        
 
     def visit_identifier(self, element: Identifier) -> None:
         pass
-
-
 
 
 

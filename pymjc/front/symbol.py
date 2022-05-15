@@ -13,7 +13,9 @@ class Symbol():
 
     
     def symbol(name: str) -> Symbol:
-        symbol: Symbol = Symbol.dictionary[name]
+        symbol: Symbol = None
+        if(name in Symbol.dictionary):
+            symbol: Symbol = Symbol.dictionary[name]
         
         if symbol is None:
             symbol = Symbol(name)
@@ -79,12 +81,17 @@ class MethodEntry():
 
 class ClassEntry():
 
-    def __int__(self):
+    """def __init__(self, *args):
+        
+        super_class_val = None
+        if len(args) == 1:
+            super_class_val = args[0]
+
         self.fields = {}
         self.methods = {}
-        self.supper_class_id = None
+        self.supper_class_id = super_class_val"""
 
-    def __int__(self, supper_class_id: str):
+    def __init__(self, supper_class_id: str = None):
         self.fields = {}
         self.methods = {}
         self.supper_class_id = supper_class_id
@@ -92,6 +99,7 @@ class ClassEntry():
 
     def get_supper_class_id(self):
         return self.supper_class_id
+
 
     def get_fields(self):
         return self.fields
@@ -122,7 +130,7 @@ class ClassEntry():
         return True
 
     def contains_field(self, id: str) -> bool:
-        return Symbol.symbol(id).to_string() in self.fields.keys()
+        return Symbol.symbol(id).to_string() in self.get_fields().keys()
     
 
     def contains_method(self, id: str) -> bool:
