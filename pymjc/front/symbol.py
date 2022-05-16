@@ -15,7 +15,7 @@ class Symbol():
     def symbol(name: str) -> Symbol:
         symbol: Symbol = None
         if(name in Symbol.dictionary):
-            symbol: Symbol = Symbol.dictionary[name]
+            symbol: Symbol = Symbol.dictionary.get(name)
         
         if symbol is None:
             symbol = Symbol(name)

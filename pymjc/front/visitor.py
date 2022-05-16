@@ -672,7 +672,6 @@ class FillSymbolTableVisitor(Visitor):
         return self.symbol_table
 
     def visit_program(self, element: Program) -> None:
-        #if(element != None):
         element.main_class.accept(self)
         for index in range(element.class_decl_list.size()):
             element.class_decl_list.element_at(index).accept(self)
@@ -1339,7 +1338,7 @@ class TypeCheckingVisitor(TypeVisitor):
         return None
 
     def visit_method_decl(self, element: MethodDecl) -> Type:
-        element.type.accept_type(self)
+        aux = element.type.accept_type(self)
         element.name.accept_type(self)
 
         for index in range(element.formal_param_list.size()):
@@ -1353,8 +1352,7 @@ class TypeCheckingVisitor(TypeVisitor):
 
         exp_type = element.return_exp.accept_type(self)
 
-        if(element.type != exp_type):
-            print(exp_type)
+        if(aux != exp_type):
             self.add_semantic_error(SemanticErrorType.RETURN_TYPE_MISMATCH)
 
         return element.type
@@ -1395,18 +1393,38 @@ class TypeCheckingVisitor(TypeVisitor):
         pass
     
     def visit_and(self, element: And) -> Type:
+        left_exp = element.left_side.accept_type(self)
+        right_exp = element.right_side.accept_type(self)
+        if (left_exp != BooleanType or right_exp != BooleanType):
+            self.add_semantic_error(SemanticErrorType.AND_TYPE_MISMATCH)
         return BooleanType
 
     def visit_less_than(self, element: LessThan) -> Type:
+        left_exp = element.left_side.accept_type(self)
+        right_exp = element.right_side.accept_type(self)
+        if (left_exp != BooleanType or right_exp != BooleanType):
+            self.add_semantic_error(SemanticErrorType.LESS_THAN_TYPE_MISMATCH)
         return BooleanType
 
     def visit_plus(self, element: Plus) -> Type:
+        left_exp = element.left_side.accept_type(self)
+        right_exp = element.right_side.accept_type(self)
+        if (left_exp != IntegerType or right_exp != IntegerType):
+            self.add_semantic_error(SemanticErrorType.PLUS_TYPE_MISMATCH)
         return IntegerType
 
     def visit_minus(self, element: Minus) -> Type:
+        left_exp = element.left_side.accept_type(self)
+        right_exp = element.right_side.accept_type(self)
+        if (left_exp != IntegerType or right_exp != IntegerType):
+            self.add_semantic_error(SemanticErrorType.MINUS_TYPE_MISMATCH)
         return IntegerType
     
     def visit_times(self, element: Times) -> Type:
+        left_exp = element.left_side.accept_type(self)
+        right_exp = element.right_side.accept_type(self)
+        if (left_exp != IntegerType or right_exp != IntegerType):
+            self.add_semantic_error(SemanticErrorType.TIMES_TYPE_MISMATCH)
         return IntegerType
 
     def visit_array_lookup(self, element: ArrayLookup) -> Type:

@@ -31,6 +31,7 @@ class MJParser(Parser):
     def Goal(self, p):
         #if(p.ClassDeclarationStar)
         p.ClassDeclarationStar.class_decl_list.reverse()
+        #p.ClassDeclarationStar.class_decl_list
         return Program(p.MainClass, p.ClassDeclarationStar)
     
     @_('CLASS Identifier LEFTBRACE PUBLIC STATIC VOID MAIN LEFTPARENT STRING LEFTSQRBRACKET RIGHTSQRBRACKET Identifier RIGHTPARENT LEFTBRACE Statement RIGHTBRACE RIGHTBRACE')

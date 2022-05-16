@@ -1,12 +1,14 @@
 class A {
     public static void main(String[] args){
-        C obj1;
-        B obj2;
+        {
+            //C obj1;
+            //B obj2;
 
-        obj1 = new C();
-        obj2 = new B();
+            obj1 = new C();
+            obj2 = new B();
 
-		System.out.println(obj2.twoMethod());
+    		System.out.println(obj2.twoMethod());
+        }
     }
 }
 
