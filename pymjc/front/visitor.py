@@ -1377,8 +1377,6 @@ class TypeCheckingVisitor(TypeVisitor):
         
 
         if type(left_type) != type(right_type) and left_type != None :
-            print("ASSIGN NAMES: ", element.left_side.name," = ", right_type)
-            print("ASSIGN: ", left_type," = ", right_type)
             self.add_semantic_error(SemanticErrorType.ASSIGN_TYPE_MISMATCH)
         
         
