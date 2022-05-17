@@ -8,10 +8,9 @@ class B {
 
     public int oneMethod(int param){
         int obj;
-        int a;
-        
+
         //obj.oneMethod(20);
-        a = obj.oneMethod(20);
+        System.out.println(obj.oneMethod(20));
 		return param ;
     }
 
