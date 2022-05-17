@@ -39,6 +39,7 @@ class SemanticTest(unittest.TestCase):
             test_data_file_path_map[file_name] = os.path.join(test_faulty_files_path, file_name)
 
         for file_name in cls.test_suite_oracles:
+            print(file_name)
             with open(test_data_file_path_map[file_name], "r") as source_test_file:
                 content = source_test_file.read()
                 lexer = MJLexer()

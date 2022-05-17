@@ -295,5 +295,5 @@ class MJParser(Parser):
 
     def error(self, p):
         MJLogger.parser_log(self.src_file_name, p.lineno, p.value[0])
-        print(self.src_file_name, p.lineno, p.value)
+        print("ERRO: ", self.src_file_name, p.lineno, p.value)
         self.syntax_error = True
