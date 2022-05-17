@@ -11,13 +11,18 @@ class B {
       int aux2;
       int[] aux3;
       boolean value;
-
+      int a;
+       
       value = true;
       aux1 = new int[3];
       aux1[0] = value;
+
       //aux1[value];
       //aux2[0];
       //aux2.length;
+      a = aux1[value];
+      a = aux2[0];
+      a = aux2.length;
       aux3 = new int[value];
 
 		  return 0 ;

@@ -11,10 +11,12 @@ class MJParser(Parser):
         self.src_file_name = "UnknownSRCFile"
         super().__init__
         
-    precedence = (('nonassoc', LESS, AND),
+    precedence = (
+                    ('nonassoc', LESS, AND),
                   ('left', PLUS, MINUS),        
                   ('left', TIMES),
-                  ('right', NOT)
+                  ('right', NOT),
+                  ('left', DOT)
                  )
                  
     tokens = MJLexer.tokens
@@ -29,9 +31,7 @@ class MJParser(Parser):
     ###################################    
     @_('MainClass ClassDeclarationStar')
     def Goal(self, p):
-        #if(p.ClassDeclarationStar)
         p.ClassDeclarationStar.class_decl_list.reverse()
-        #p.ClassDeclarationStar.class_decl_list
         return Program(p.MainClass, p.ClassDeclarationStar)
     
     @_('CLASS Identifier LEFTBRACE PUBLIC STATIC VOID MAIN LEFTPARENT STRING LEFTSQRBRACKET RIGHTSQRBRACKET Identifier RIGHTPARENT LEFTBRACE Statement RIGHTBRACE RIGHTBRACE')
@@ -244,7 +244,7 @@ class MJParser(Parser):
 
     @_('Identifier')
     def Expression(self, p):
-        return IdentifierExp(p.Identifier)
+        return IdentifierExp(p.Identifier.name)
 
     @_('Literal')
     def Expression(self, p):
@@ -295,5 +295,4 @@ class MJParser(Parser):
 
     def error(self, p):
         MJLogger.parser_log(self.src_file_name, p.lineno, p.value[0])
-        print("ERRO: ", self.src_file_name, p.lineno, p.value)
         self.syntax_error = True

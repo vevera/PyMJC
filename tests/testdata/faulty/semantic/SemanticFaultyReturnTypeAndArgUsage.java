@@ -21,3 +21,5 @@ class B {
 		return param01 ;
     }
 }
+
+// tem dois metodos return type miss onemethod e o twomethod

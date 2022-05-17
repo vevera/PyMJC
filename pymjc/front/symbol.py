@@ -165,31 +165,24 @@ class SymbolTable():
         
         return True
 
-    """def add_extends_entry_filds(self, id: str, supper_class_id: str) -> None:
+    def contains_in_scope(self, name: str):
 
-        base: ClassEntry = self.get_class_entry(Symbol.symbol(id).to_string())
-        supper_class: ClassEntry = self.get_class_entry(Symbol.symbol(supper_class_id).to_string())
-        #print("AQUI1",supper_field_id)
-        for supper_field_id in supper_class.get_fields().keys():
-            print("AQUI",supper_field_id)
-            base.add_var(supper_field_id, supper_class.get_field(supper_field_id))
-        
-    def add_extends_entry_methods(self, id: str, supper_class_id: str) -> None:
+        is_declarad_in_method = False
+        is_arg = False
+        is_declarad_in_class = self.curr_class.contains_field(name)
 
-        base: ClassEntry = self.get_class_entry(Symbol.symbol(id).to_string())
-        supper_class: ClassEntry = self.get_class_entry(Symbol.symbol(supper_class_id).to_string())
-        #print("AQUI1",supper_field_id)
-        for supper_method_id in supper_class.get_methods().keys():
-            base.add_method(supper_method_id, supper_class.get_method(supper_method_id))"""
+        if(self.curr_method != None):
+            is_declarad_in_method = self.curr_method.contains_local(name)
+            is_arg = self.curr_method.contains_param(name)
 
-    
+        return is_declarad_in_class or is_declarad_in_method or is_arg
+
     def add_extends_entry(self, id: str, supper_class_id: str) -> None:
 
         base: ClassEntry = self.get_class_entry(Symbol.symbol(id).to_string())
         supper_class: ClassEntry = self.get_class_entry(Symbol.symbol(supper_class_id).to_string())
-        #print("AQUI1",supper_field_id)
+        
         for supper_field_id in supper_class.get_fields().keys():
-            print("AQUI",supper_field_id)
             base.add_var(supper_field_id, supper_class.get_field(supper_field_id))
         
         for supper_method_id in supper_class.get_methods().keys():
