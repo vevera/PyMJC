@@ -248,10 +248,6 @@ class MJParser(Parser):
 
     @_('Literal')
     def Expression(self, p):
-        if(p.Literal == True):
-            return TrueExp()
-        if(p.Literal == False):
-            return FalseExp()     
         return p.Literal
 
     ###################################
@@ -259,7 +255,7 @@ class MJParser(Parser):
     ###################################
     @_('ID')
     def Identifier(self, p):
-        return Identifier(p.ID)
+        return Identifier(str(p.ID))
 
     @_('')
     def Empty(self, p):
@@ -279,11 +275,11 @@ class MJParser(Parser):
 
     @_('TRUE')
     def BooleanLiteral(self, p):
-        return True
+        return TrueExp()
 
     @_('FALSE')
     def BooleanLiteral(self, p):
-        return False
+        return FalseExp()
 
     @_('NUM')
     def IntLiteral(self, p):
